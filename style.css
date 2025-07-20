@@ -122,6 +122,22 @@
 
 }
 
+
+body .uuuu p 
+{
+   border:0.5px solid black ;
+   background:#fff ;
+   text-align: center;
+   width:100%;
+   position:absolute;
+   top:19rem;
+   right:0rem;
+font-size: 8rem ;
+color:#626262 ;
+}
+
+
+
    .header .search-form
 
    {

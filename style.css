@@ -1,4 +1,4 @@
-:root {
+:root{
    --green: green;
    --black: #130f40;
    --light-color: #666;
@@ -3533,6 +3533,11 @@ border-radius: 0.5rem
    {
    display:inline-block;
  }   
+
+.header 
+    {
+       height:7rem;
+    }
 
  .header .search-form
  {

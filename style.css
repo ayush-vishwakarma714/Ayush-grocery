@@ -1,4 +1,4 @@
-root {
+:root {
    --green: green;
    --black: #130f40;
    --light-color: #666;
@@ -37,16 +37,31 @@ section
    padding: 2rem 9%;
 }
 
+.heading
+{
+   text-align: center;
+   padding: 2rem, 0;
+   padding-bottom: 3rem;
+   font-size: 3.5rem;
+   color: var(--black);
+}
+.heading span{
+   background-color: var(--green);
+   color: white;
+   display: inline-block;
+   padding: 5rem ,3rem;
+   clip-path: polygon(100% 0,93% 50%,100% 99%,0% 100%,7% 50%,0% 0%);
+}
 
 .btn{
    border: 2px solid var(--black);
+   margin-top: 1rem 1.5rem;
    display: inline-block;
-   color: var(--black);
-   padding: 0.8rem;
-   margin: 1rem 1.5rem;
-   cursor: pointer;
+   padding: 0.8rem 3rem;
+   font-size: 1.7rem;
    border-radius: 0.5rem;
-   width:90%;
+   color: var(--black);
+   cursor: pointer;
 }
 .btn:hover{
    background-color: var(--green);
@@ -302,12 +317,12 @@ border-radius: 0.5rem
    border: 1px solid;
   display: flex;
   justify-content: center;
-  background:url(Banner.png) no-repeat;
+  background:url(image/banner.png) no-repeat;
   background-position: center;
   background-size: cover;
   top:10%;
-  padding-top: 27rem;
-  padding-bottom: 37rem;
+  padding-top: 17rem;
+  padding-bottom: 10rem;
   width: 100%;
 }
 
@@ -333,7 +348,10 @@ border-radius: 0.5rem
 {
    font-size: 1.5rem ;
    color: var(--light-color);
+padding: 1rem ,0;
+line-height: 1.5; 
 }
+
 
  
 /*@MEDIA quari */
@@ -406,4 +424,4 @@ border-radius: 0.5rem
 
 }
 
- }
+}

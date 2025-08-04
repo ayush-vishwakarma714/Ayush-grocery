@@ -1,4 +1,4 @@
-:root {
+root {
    --green: green;
    --black: #130f40;
    --light-color: #666;
@@ -302,7 +302,7 @@ border-radius: 0.5rem
    border: 1px solid;
   display: flex;
   justify-content: center;
-  background:url(banner.png) no-repeat;
+  background:url(Banner.png) no-repeat;
   background-position: center;
   background-size: cover;
   top:10%;

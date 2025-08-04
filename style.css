@@ -302,7 +302,7 @@ border-radius: 0.5rem
    border: 1px solid;
   display: flex;
   justify-content: center;
-  background:url(image/banner.png) no-repeat;
+  background:url(banner.png) no-repeat;
   background-position: center;
   background-size: cover;
   top:10%;

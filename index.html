@@ -9,8 +9,6 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 <body>
   
@@ -36,6 +34,7 @@
        <div class="fa fa-user" id="login-btn"></div>
     </div>
 
+      <!---search form -->
     
 <form class="search-form" >
   <input type="search" id="search-box" placeholder="search here....">
@@ -43,11 +42,12 @@
 </label>
 </form>
 
+  <!----shopping-cart section-->
 
 <div class="shopping-cart-a">
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="watermelon.jpg">
+       <img src="image/watermelon.jpg">
        <div class="content"> 
         <h3>watermelon</h3>
         <span class="price">₹50</span><br>
@@ -58,7 +58,7 @@
  
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="onion.jpg">
+       <img src="image/onion.jpg">
        <div class="content"> 
         <h3>onion</h3>
         <span class="price">₹80</span><br>
@@ -70,7 +70,7 @@
 
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="paneer.jpg">
+       <img src="image/paneer.jpg">
        <div class="content"> 
         <h3>paneer</h3>
         <span class="price">₹75</span><br>
@@ -87,17 +87,17 @@
 
 </div>
 
-<form action="#" class="login-form" >
-  <h3>LOG IN !!</h3>
-  <input type="email" placeholder="enter email" class="box"> 
-  <input type="password" placeholder="enter password" class="box">
+  <!----log-in form section-->
 
-  <p> forget password? <a href="#" >click here </a></p> 
-  <p> dont have account? <a href="#" >create now  </a></p> 
 
-  <input type="submit" value="log in" class="btn">
-
+  <form action="#" class="login-form" id="profile-menu">
+  
+<a href="/login-form.html "target ="_ main" class=" btn">log in </a>
+<h1>or</h1>
+<a href="/login-form.html "target ="_ main" class=" btn">sign up </a>
 </form>
+
+
 
   </header>
 
@@ -105,7 +105,7 @@
 
 <!-- banner section-->
 
-<section class="home id="home">
+<section class="home" id="home">
   <div class="content">
     <h3>welcome to our <span> Grocery</span> store</h3>
     <p>aaye ho tho kharid kar hi jana </p>
@@ -116,17 +116,65 @@
 <!-- /banner section-->
 
 <!-- our features section--> 
- <section class="features" id="features">
+
+<section class="features" id="features">
    <h1 class="heading">Our<span>Features</span></h1>
     </section>
+
     <!-- /our features section-->
-    
-    
+    <script defer src="/main.js"></script>
 
+  <script type="module">
+    // Firebase SDK imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } 
+      from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+ 
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZjJb4y136Qls3rpk8PptVAe7Y5nMUI9g",
+       authDomain: "grocery-login-web.firebaseapp.com",
+         projectId: "grocery-login-web",
+           storageBucket: "grocery-login-web.firebasestorage.app",
+           messagingSenderId: "285284206273",
+           appId: "1:285284206273:web:f771c0c274b5e91f067640"
+            };
+ 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+ 
+    const profileMenu = document.getElementById("profile-menu");
+ 
+    // Check login state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // After login → show logout
+        profileMenu.innerHTML = `
+          <button id="logoutBtn" class="btn">Logout</button>
+        `;
+ 
+        // Logout function
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          signOut(auth).then(() => {
+            alert("✅ Logged out successfully!");
+            // back to homepage (this same page)
+            window.location.href = "/";
+          }).catch((error) => {
+            console.error(error);
+          });
+      });
+ 
+      } else {
+        // Before login → show login/signup
+        profileMenu.innerHTML = `
+          <a href="/login-form.html" class="btn">Log In</a>
+          <h1>or</h1>
+          <a href="/login-form.html" class="btn">Sign Up</a>
+        `;
+  }
+   });
 
-
-
-  <script defer src="/main.js"></script>
+   </script>
 
 </body>
 </html>

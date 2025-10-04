@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Grocery Web - Login</title>
   <style>
     body {
@@ -23,17 +22,12 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.15);
       width: 320px;
       text-align: center;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .input-box {
       position: relative;
-      margin-bottom: 15px;
     }
+
+    h2 { margin-bottom: 20px; color: #333; }
+
+    .input-box { position: relative; margin-bottom: 15px; }
 
     input {
       width: 90%;
@@ -66,14 +60,9 @@
       font-size: 15px;
     }
 
-    button:hover {
-      background: #256d25;
-    }
+    button:hover { background: #256d25; }
 
-    p {
-      margin-top: 15px;
-      font-size: 14px;
-    }
+    p { margin-top: 15px; font-size: 14px; }
 
     p a {
       color: #2f8f2f;
@@ -82,47 +71,65 @@
       cursor: pointer;
     }
 
-    p a:hover {
-      text-decoration: underline;
-    }
+    p a:hover { text-decoration: underline; }
 
+    /* hidden by default */
     .page { display: none; }
     .active { display: block; }
 
-    .popup {
+    /* Google button */
+    .google-btn {
+      margin-top: 15px;
+      background: white;
+      color: #444;
+      border: 1px solid #ccc;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .google-btn img { width: 20px; height: 20px; }
+
+    .google-btn:hover { background: #eee; }
+
+    /* Error popup */
+    .error-popup {
       position: fixed;
-      top: -100px;
+      top: -60px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 15px 20px;
-      border-radius: 8px;
-      background: #333;
+      background: #ff4d4d;
       color: white;
-      font-size: 16px;
-      z-index: 1000;
-      transition: top 0.5s ease-in-out;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: top 0.4s ease;
+      z-index: 9999;
+    }
+    .error-popup.show { top: 20px; }
+    .remember-me {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 14px;
+        justify-content: center;
     }
 
-    .popup.show {
-      top: 20px;
-    }
-
-    .popup.success {
-      background: #4CAF50; /* Green */
-    }
-
-    .popup.error {
-      background: #f44336; /* Red */
+    .remember-me input {
+        width: auto;
+        margin-right: 8px;
     }
   </style>
 </head>
 <body>
-  <div id="popup" class="popup"></div>
   <div class="container">
+    <!-- Error Popup -->
+    <div id="errorPopup" class="error-popup"></div>
 
     <!-- Login Page -->
-    <div id="loginPage" class="page active">
+    <div id="loginPage" class="page">
       <h2>Login</h2>
       <div class="input-box">
         <input type="email" id="loginEmail" placeholder="Email">
@@ -131,7 +138,15 @@
         <input type="password" id="loginPassword" placeholder="Password">
         <span class="toggle-password" onclick="togglePassword('loginPassword')">👁️</span>
       </div>
+     <div class="remember-me">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">Remember Me</label>
+      </div>
       <button onclick="login()">Login</button>
+      <button onclick="googleLogin()" class="google-btn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Continue with Google
+      </button>
       <p>Don’t have an account? <a onclick="showPage('signupPage')">Sign up now</a></p>
     </div>
 
@@ -149,125 +164,127 @@
         <span class="toggle-password" onclick="togglePassword('signupPassword')">👁️</span>
       </div>
       <button onclick="signup()">Sign Up</button>
+      <button onclick="googleLogin()" class="google-btn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Continue with Google
+      </button>
       <p>Already have an account? <a onclick="showPage('loginPage')">Login</a></p>
     </div>
-
   </div>
 
   <script type="module">
-    // Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile }
-      from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { 
+      getAuth, createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, 
+      setPersistence, browserLocalPersistence, browserSessionPersistence,
+      onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDZjJb4y136Qls3rpk8PptVAe7Y5nMUI9g",
-       authDomain: "grocery-login-web.firebaseapp.com",
-         projectId: "grocery-login-web",
-           storageBucket: "grocery-login-web.firebasestorage.app",
-           messagingSenderId: "285284206273",
-           appId: "1:285284206273:web:f771c0c274b5e91f067640"
-            };
-            
-    // Init Firebase
+      authDomain: "grocery-login-web.firebaseapp.com",
+      projectId: "grocery-login-web",
+      storageBucket: "grocery-login-web.appspot.com",
+      messagingSenderId: "285284206273",
+      appId: "1:285284206273:web:f771c0c274b5e91f067640"
+    };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    // Page Switcher
+    // Switch pages
     window.showPage = function (id) {
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
     }
 
-    // Toggle Password
+    // Read ?page=signup from URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("page") === "signup") showPage("signupPage");
+    else showPage("loginPage");
+
+    // Toggle password visibility
     window.togglePassword = function (id) {
       const field = document.getElementById(id);
       field.type = field.type === "password" ? "text" : "password";
     }
 
-    // Email validation
-    function isValidEmail(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(email.toLowerCase());
+    // Show error popup
+    let errorTimeout;
+    function showError(msg) {
+      const popup = document.getElementById("errorPopup");
+      popup.textContent = msg;
+      popup.classList.add("show");
+      if (errorTimeout) clearTimeout(errorTimeout);
+      errorTimeout = setTimeout(() => popup.classList.remove("show"), 3000);
     }
 
-    // Function to show popup messages
-    function showPopup(message, type) {
-      const popup = document.getElementById('popup');
-      popup.textContent = message;
-      popup.className = 'popup ' + type; // Reset classes and add new type
-      popup.classList.add('show');
-
-      setTimeout(() => {
-        popup.classList.remove('show');
-      }, 3000); // Hide after 3 seconds
+    // Validate email format
+    function validEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     // Signup
     window.signup = function () {
       const name = document.getElementById("signupName").value.trim();
       const email = document.getElementById("signupEmail").value.trim();
-      const password = document.getElementById("signupPassword").value.trim();
+      const password = document.getElementById("signupPassword").value;
 
-      if (!name || !email || !password) {
-        showPopup("⚠️ Please fill all fields", "error");
-        return;
-      }
-      if (name.length < 3) {
-        showPopup("⚠️ Name must be at least 3 characters", "error");
-        return;
-      }
-      if (!isValidEmail(email)) {
-        showPopup("⚠️ Please enter a valid email address", "error");
-        return;
-      }
-      if (password.length < 6) {
-        showPopup("⚠️ Password must be at least 6 characters", "error");
-        return;
-      }
+      if (!name || !email || !password) return showError("⚠️ Please fill all fields");
+      if (!validEmail(email)) return showError("⚠️ Enter a valid email");
+      if (password.length < 6) return showError("⚠️ Password must be at least 6 characters");
 
       createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          updateProfile(userCredential.user, { displayName: name });
-          showPopup("✅ Signup successful! Redirecting...", "success");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1500);
+        .then(() => {
+          window.location.href = "index.html"; 
         })
-        .catch(err => {
-          showPopup("❌ " + err.message, "error");
-        });
+        .catch(err => showError(err.message));
     }
 
     // Login
     window.login = function () {
       const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const remember = document.getElementById("rememberMe").checked;
 
-      if (!email || !password) {
-        showPopup("⚠️ Please fill all fields", "error");
-        return;
-      }
-      if (!isValidEmail(email)) {
-        showPopup("⚠️ Please enter a valid email address", "error");
-        return;
-      }
-      if (password.length < 6) {
-        showPopup("⚠️ Password must be at least 6 characters", "error");
-        return;
-      }
+      if (!email || !password) return showError("⚠️ Please fill all fields");
+      if (!validEmail(email)) return showError("⚠️ Enter a valid email");
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          showPopup("✅ Login successful! Redirecting...", "success");
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1500);
-        })
-        .catch(err => {
-          showPopup("❌ " + err.message, "error");
-        });
+      setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence)
+      .then(() => {
+        return signInWithEmailAndPassword(auth, email, password);
+      })
+      .then(() => {
+        window.location.href = "index.html"; 
+      })
+      .catch(err => showError(err.message));
+    }
+
+    // Google Login
+    window.googleLogin = function () {
+      setPersistence(auth, browserLocalPersistence)
+      .then(() => signInWithPopup(auth, provider))
+      .then(() => {
+        window.location.href = "index.html";
+      })
+      .catch(err => showError(err.message));
+    }
+
+    // Auto-detect login state (for index.html later)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Logged in as", user.email);
+      } else {
+        console.log("No user logged in");
+      }
+    });
+
+    // Logout (add in index.html)
+    window.logout = function() {
+      signOut(auth).then(() => {
+        window.location.href = "login-form.html";
+      });
     }
   </script>
 </body>

@@ -1,13 +1,15 @@
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sainik ardh sainik canteen</title> 
+  <title>grocery store by ayush </title>
+
   
   <link href='/style.css' rel='stylesheet'>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <meta name="description" content="cheap and best selling grocery,electronics and,household products website.best scheme and offers in festivals. " />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 </head>
 <body>
   
@@ -46,7 +48,7 @@
 <div class="shopping-cart-a">
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="watermelon.jpg">
+       <img src="image/watermelon.jpg">
        <div class="content"> 
         <h3>watermelon</h3>
         <span class="price">₹50</span><br>
@@ -57,7 +59,7 @@
  
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="onion.jpg">
+       <img src="image/onion.jpg">
        <div class="content"> 
         <h3>onion</h3>
         <span class="price">₹80</span><br>
@@ -69,7 +71,7 @@
 
   <div class="box">
     <i class="fa fa-trash "></i>
-       <img src="paneer.jpg">
+       <img src="image/paneer.jpg">
        <div class="content"> 
         <h3>paneer</h3>
         <span class="price">₹75</span><br>
@@ -91,12 +93,11 @@
 
   <form action="#" class="login-form" id="profile-menu">
   
-<a href="/login-form.html "target ="_ main" class=" btn">log in </a>
+<a href="/login-form.html?page=login" class="btn">Login</a>
 <h1>or</h1>
-<a href="/login-form.html "target ="_ main" class=" btn">sign up </a>
+<a href="/login-form.html?page=signup" class="btn">Sign Up</a>
+
 </form>
-
-
 
   </header>
 
@@ -122,58 +123,48 @@
 
     <!-- /our features section-->
     <script defer src="/main.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-  <script type="module">
-    // Firebase SDK imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } 
-      from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
- 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZjJb4y136Qls3rpk8PptVAe7Y5nMUI9g",
-       authDomain: "grocery-login-web.firebaseapp.com",
-         projectId: "grocery-login-web",
-           storageBucket: "grocery-login-web.firebasestorage.app",
-           messagingSenderId: "285284206273",
-           appId: "1:285284206273:web:f771c0c274b5e91f067640"
-            };
- 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
- 
-    const profileMenu = document.getElementById("profile-menu");
- 
-    // Check login state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // After login → show logout
-        profileMenu.innerHTML = `
-          <button id="logoutBtn" class="btn">Logout</button>
-        `;
- 
-        // Logout function
+      const firebaseConfig = {
+        apiKey: "AIzaSyDZjJb4y136Qls3rpk8PptVAe7Y5nMUI9g",
+        authDomain: "grocery-login-web.firebaseapp.com",
+        projectId: "grocery-login-web",
+        storageBucket: "grocery-login-web.firebasestorage.app",
+        messagingSenderId: "285284206273",
+        appId: "1:285284206273:web:f771c0c274b5e91f067640"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      const loginForm = document.querySelector(".login-form");
+
+      function showLogout() {
+        loginForm.innerHTML = `<button id="logoutBtn" class="btn">Logout</button>`;
         document.getElementById("logoutBtn").addEventListener("click", () => {
           signOut(auth).then(() => {
-            alert("✅ Logged out successfully!");
-            // back to homepage (this same page)
-            window.location.href = "/";
-          }).catch((error) => {
-            console.error(error);
+            window.location.reload();
           });
-      });
- 
-      } else {
-        // Before login → show login/signup
-        profileMenu.innerHTML = `
-          <a href="/login-form.html" class="btn">Log In</a>
+        });
+      }
+
+      function showLoginSignup() {
+        loginForm.innerHTML = `
+          <a href="/login-form.html?page=login" class="btn">Log In</a>
           <h1>or</h1>
-          <a href="/login-form.html" class="btn">Sign Up</a>
+          <a href="/login-form.html?page=signup" class="btn">Sign Up</a>
         `;
-  }
-   });
+      }
 
-   </script>
-
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          showLogout();
+        } else {
+          showLoginSignup();
+        }
+      });
+    </script>
 </body>
 </html>
